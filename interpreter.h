@@ -1,0 +1,16 @@
+#ifndef _INTERPRETER
+#define _INTERPRETER
+
+// A frame is a linked list of bindings, and a pointer to another frame.  A
+// binding is a variable name (represented as a string), and a pointer to the
+// Value it is bound to. Specifically how you implement the list of bindings is
+// up to you.
+void interpret(Value *tree);
+
+//Prints the inputted linkedlist in a schemey way
+void print(Value *tree);
+
+//Evalutates the inputted Expression
+Value *eval(Value *expr, Frame *frame);
+
+#endif

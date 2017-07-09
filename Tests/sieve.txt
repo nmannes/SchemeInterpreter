@@ -1,0 +1,52 @@
+;;#lang racket
+
+(define false?
+  (lambda (bool)
+    (if (boolean? bool) (if bool #f #t) #f)))
+
+;;(define boolean?(lambda (bool)(or bool #f)))
+
+;thanks dave for this code
+(define seq
+  (lambda (start stop)
+    (if(<= start stop)
+       (cons start (lambda () (seq (+ start 1) stop)))
+       #f
+       )))
+
+(define inf-seq
+  (lambda (start)
+    (cons start (lambda ()(inf-seq (+ start 1))))
+       ))
+
+(define first-n
+  (lambda (lzlst n)
+    (cond
+      ((or (null? (car lzlst)) (boolean? (car lzlst)) (< n 1)) (quote()))
+      (else (cons (car lzlst) (first-n ((cdr lzlst)) (- n 1) ) )))))
+
+(define nth
+  (lambda (lzlst n)
+    (cond
+      ((and (= n 1) (not (null? (car lzlst)))) (car lzlst))
+      ((< n 2) #f)
+      ((null? lzlst) #f)
+      (else (nth ((cdr lzlst)) (- n 1))))))
+
+(define filter-multiples
+  (lambda (lzlst n)
+    (cond
+      ((false? lzlst) #f)
+      ((= 0 (modulo (car lzlst) n)) (filter-multiples ((cdr lzlst)) n))
+      (else (cons (car lzlst) (lambda () (filter-multiples ((cdr lzlst)) n)))))))
+
+(define primes
+  (lambda ()
+    (primehelp (inf-seq 2))))
+
+(define primehelp
+  (lambda (lst)
+    (cons (car lst) (lambda () (primehelp (filter-multiples ((cdr lst)) (car lst) ))))))
+
+
+(first-n (primes) 20)
